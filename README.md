@@ -1,4 +1,4 @@
-astyanax-quickstart
-===================
+Astyanax Quick Start
+===========================
 
-Quickstart project for Astyanax against Cassandra using Composites/Compound Keys
+This is a quick demo/quickstart application that uses Astyanax to connect to Cassandra.
