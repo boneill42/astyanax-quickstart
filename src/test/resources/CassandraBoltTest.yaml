@@ -1,3 +1,0 @@
-name: TestKeyspace
-columnFamilies:
-- name: users

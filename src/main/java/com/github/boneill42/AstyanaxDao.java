@@ -62,6 +62,18 @@ public class AstyanaxDao {
         }
         mutation.execute();
     }
+    
+    /**
+     * Writes compound/composite columns.
+     */
+    public void writeBlog(String columnFamilyName, String rowKey, FishBlog blog, byte[] value) throws ConnectionException {
+        AnnotatedCompositeSerializer<FishBlog> entitySerializer = new AnnotatedCompositeSerializer<FishBlog>(FishBlog.class);
+        MutationBatch mutation = keyspace.prepareMutationBatch();
+        ColumnFamily<String, FishBlog> columnFamily = new ColumnFamily<String, FishBlog>(columnFamilyName,
+                StringSerializer.get(), entitySerializer);
+        mutation.withRow(columnFamily, rowKey).putColumn(blog, value, null);
+        mutation.execute();
+    }
 
     /**
      * Fetches an entire row.
@@ -79,7 +91,7 @@ public class AstyanaxDao {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    public ColumnList<FishBlog> readEntity(String columnFamilyName, String rowKey) throws ConnectionException {
+    public ColumnList<FishBlog> readBlogs(String columnFamilyName, String rowKey) throws ConnectionException {
         AnnotatedCompositeSerializer<FishBlog> entitySerializer = new AnnotatedCompositeSerializer<FishBlog>(FishBlog.class);
         ColumnFamily<String, FishBlog> columnFamily = new ColumnFamily<String, FishBlog>(columnFamilyName,
                 StringSerializer.get(), entitySerializer);

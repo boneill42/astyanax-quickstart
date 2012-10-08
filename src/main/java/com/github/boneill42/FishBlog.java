@@ -6,10 +6,10 @@ public class FishBlog {
     @Component(ordinal = 0)
     public long when;
     @Component(ordinal = 1)
-    public String type;
+    public String fishtype;
     @Component(ordinal = 2)
     public String field;
-    
+        
     public FishBlog() {
     }
 }
