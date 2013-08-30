@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.netflix.astyanax.AstyanaxContext;
+import com.netflix.astyanax.ColumnListMutation;
 import com.netflix.astyanax.Keyspace;
 import com.netflix.astyanax.MutationBatch;
 import com.netflix.astyanax.connectionpool.NodeDiscoveryType;
@@ -37,7 +38,7 @@ public class AstyanaxDao {
                     .buildKeyspace(ThriftFamilyFactory.getInstance());
 
             this.astyanaxContext.start();
-            this.keyspace = this.astyanaxContext.getEntity();
+            this.keyspace = this.astyanaxContext.getClient();
             // test the connection
             this.keyspace.describeKeyspace();
         } catch (Throwable e) {
@@ -65,16 +66,27 @@ public class AstyanaxDao {
     
     /**
      * Writes compound/composite columns.
+     * dao.writeBlog("fishblogs", fishBlog);
      */
-    public void writeBlog(String columnFamilyName, String rowKey, FishBlog blog, byte[] value) throws ConnectionException {
-        AnnotatedCompositeSerializer<FishBlog> entitySerializer = new AnnotatedCompositeSerializer<FishBlog>(FishBlog.class);
+    public void writeBlog(String columnFamilyName, FishBlog fishBlog) throws ConnectionException {
+        AnnotatedCompositeSerializer<FishBlogCompositeColumn> entitySerializer = new AnnotatedCompositeSerializer<FishBlogCompositeColumn>(FishBlogCompositeColumn.class);
         MutationBatch mutation = keyspace.prepareMutationBatch();
-        ColumnFamily<String, FishBlog> columnFamily = new ColumnFamily<String, FishBlog>(columnFamilyName,
-                StringSerializer.get(), entitySerializer);
-        mutation.withRow(columnFamily, rowKey).putColumn(blog, value, null);
+        ColumnFamily<String, FishBlogCompositeColumn> columnFamily = new ColumnFamily<String, FishBlogCompositeColumn>(columnFamilyName, StringSerializer.get(), entitySerializer);
+        
+        /*
+            RowKey: <userId>
+            => (column=<when>:<fishType>:blog, value=<blog>, timestamp=<>)
+            => (column=<when>:<fishType>:image, value=<image>, timestamp=<>)
+        */
+        ColumnListMutation<FishBlogCompositeColumn> row = mutation.withRow(columnFamily, fishBlog.getUserId());
+        FishBlogCompositeColumn blogColumn = new FishBlogCompositeColumn(fishBlog.getWhen(), fishBlog.getFishType(), FishBlogCompositeColumn.BLOG_FIELD);
+        FishBlogCompositeColumn imageColumn = new FishBlogCompositeColumn(fishBlog.getWhen(), fishBlog.getFishType(), FishBlogCompositeColumn.IMAGE_FIELD);
+        row.putColumn(blogColumn, fishBlog.getBlog());
+        row.putColumn(imageColumn, fishBlog.getImage());
+        
         mutation.execute();
     }
-
+    
     /**
      * Fetches an entire row.
      */
@@ -91,11 +103,11 @@ public class AstyanaxDao {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    public ColumnList<FishBlog> readBlogs(String columnFamilyName, String rowKey) throws ConnectionException {
-        AnnotatedCompositeSerializer<FishBlog> entitySerializer = new AnnotatedCompositeSerializer<FishBlog>(FishBlog.class);
-        ColumnFamily<String, FishBlog> columnFamily = new ColumnFamily<String, FishBlog>(columnFamilyName,
+    public ColumnList<FishBlogCompositeColumn> readBlogs(String columnFamilyName, String rowKey) throws ConnectionException {
+        AnnotatedCompositeSerializer<FishBlogCompositeColumn> entitySerializer = new AnnotatedCompositeSerializer<FishBlogCompositeColumn>(FishBlogCompositeColumn.class);
+        ColumnFamily<String, FishBlogCompositeColumn> columnFamily = new ColumnFamily<String, FishBlogCompositeColumn>(columnFamilyName,
                 StringSerializer.get(), entitySerializer);
-        OperationResult<ColumnList<FishBlog>> result = this.keyspace.prepareQuery(columnFamily).getKey(rowKey).execute();
+        OperationResult<ColumnList<FishBlogCompositeColumn>> result = this.keyspace.prepareQuery(columnFamily).getKey(rowKey).execute();
         return result.getResult();
     }
 }

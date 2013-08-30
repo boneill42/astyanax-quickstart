@@ -1,5 +1,7 @@
 package com.github.boneill42;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import com.netflix.astyanax.annotations.Component;
 
 public class FishBlogCompositeColumn {
@@ -10,7 +12,7 @@ public class FishBlogCompositeColumn {
     private long when;
 
     @Component(ordinal = 1)
-    private String fishtype;
+    private String fishType;
 
     @Component(ordinal = 2)
     private String field;
@@ -18,9 +20,9 @@ public class FishBlogCompositeColumn {
     public FishBlogCompositeColumn() {
     }
 
-    public FishBlogCompositeColumn(long when, String fishtype, String field) {
+    public FishBlogCompositeColumn(long when, String fishType, String field) {
         this.when = when;
-        this.fishtype = fishtype;
+        this.fishType = fishType;
         this.field = field;
     }
 
@@ -32,12 +34,12 @@ public class FishBlogCompositeColumn {
         this.when = when;
     }
 
-    public String getFishtype() {
-        return fishtype;
+    public String getFishType() {
+        return fishType;
     }
 
-    public void setFishtype(String fishtype) {
-        this.fishtype = fishtype;
+    public void setFishType(String fishType) {
+        this.fishType = fishType;
     }
 
     public String getField() {
@@ -46,5 +48,10 @@ public class FishBlogCompositeColumn {
 
     public void setField(String field) {
         this.field = field;
+    }
+    
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

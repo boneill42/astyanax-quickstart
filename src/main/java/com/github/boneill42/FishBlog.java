@@ -1,29 +1,29 @@
 package com.github.boneill42;
 
 public class FishBlog {
-    private String userid;
+    private String userId;
     private long when;
-    private String fishtype;
+    private String fishType;
     private String blog;
     private byte[] image;
 
     public FishBlog() {
     }
 
-    public FishBlog(String userid, long when, String fishtype, String blog, byte[] image) {
-        this.userid = userid;
+    public FishBlog(String userId, long when, String fishType, String blog, byte[] image) {
+        this.userId = userId;
         this.when = when;
-        this.fishtype = fishtype;
+        this.fishType = fishType;
         this.blog = blog;
         this.image = image;
     }
 
-    public String getUserid() {
-        return userid;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUserid(String userid) {
-        this.userid = userid;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public long getWhen() {
@@ -34,12 +34,12 @@ public class FishBlog {
         this.when = when;
     }
 
-    public String getFishtype() {
-        return fishtype;
+    public String getFishType() {
+        return fishType;
     }
 
-    public void setFishtype(String fishtype) {
-        this.fishtype = fishtype;
+    public void setFishType(String fishType) {
+        this.fishType = fishType;
     }
 
     public String getBlog() {
@@ -57,5 +57,4 @@ public class FishBlog {
     public void setImage(byte[] image) {
         this.image = image;
     }
-
 }
