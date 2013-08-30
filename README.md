@@ -21,11 +21,13 @@ We'll use the following schema:
 After running the unit tests, you should see:
 
 CQL: select * from fishblogs;
+
 		userid | when                     | fishtype | blog            | image
 		--------+--------------------------+----------+-----------------+----------------------
 		bigcat | 2013-08-30 10:56:31+0700 |  CATFISH | this is myblog. | 01000000000000000000
 
 CLI: list fishblogs;
+
 		RowKey: bigcat
 		=> (column=2013-08-30 10\:56\:31+0700:CATFISH:blog, value=74686973206973206d79626c6f672e, timestamp=1377834991626000)
 		=> (column=2013-08-30 10\:56\:31+0700:CATFISH:image, value=01000000000000000000, timestamp=1377834991626000)
