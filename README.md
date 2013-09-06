@@ -31,3 +31,5 @@ CLI: list fishblogs;
 		RowKey: bigcat
 		=> (column=2013-08-30 10\:56\:31+0700:CATFISH:blog, value=74686973206973206d79626c6f672e, timestamp=1377834991626000)
 		=> (column=2013-08-30 10\:56\:31+0700:CATFISH:image, value=01000000000000000000, timestamp=1377834991626000)
+
+Counter example is also added to com.github.boneill42.counter package, refer to db/schema.cql for details.

@@ -7,10 +7,8 @@ import org.slf4j.LoggerFactory;
 import com.netflix.astyanax.model.Column;
 import com.netflix.astyanax.model.ColumnList;
 
-public class AstyanaxDaoTest {
+public class AstyanaxDaoTest extends TestEnv {
     private static Logger LOG = LoggerFactory.getLogger(AstyanaxDaoTest.class);
-    private static final String HOST = "localhost:9160";
-    private static final String KEYSPACE = "examples";
     private static final String COLUMN_FAMILY_NAME = "fishblogs";
     
     @Test
@@ -36,7 +34,7 @@ public class AstyanaxDaoTest {
         long now = System.currentTimeMillis();
         byte[] image = new byte[10];
         image[0] = 1;
-        FishBlog fishBlog = new FishBlog("bigcat", now, "CATFISH", "this is myblog.", image);
+        FishBlog fishBlog = new FishBlog(userId, now, "CATFISH", "this is myblog.", image);
         dao.writeBlog(COLUMN_FAMILY_NAME, fishBlog);
         dumpFishBlog(dao.readBlogs(COLUMN_FAMILY_NAME, userId));
     }
